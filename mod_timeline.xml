@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="module" version="1.5.0">
+  <name>Timeline</name>
+  <author>Boris Barroso</author>
+  <creationDate>2009-07-09</creationDate>
+
+  <copyright>All rights reserved by Boris Barroso</copyright>
+
+  <license>GPL 2.0</license>
+  <authorEmail>boriscyber@gmail.com</authorEmail>
+  <authorUrl>redecuanime.com</authorUrl>
+
+  <version>0.7</version>
+
+  <description>Presents a timeline extracted from the articles</description>
+  <files>
+    <filename module="mod_timeline">mod_timeline.php</filename>
+    <filename>index.html</filename>
+    <filename>helper.php</filename>
+    <filename>tmpl/default.php</filename>
+    <filename>tmpl/index.html</filename>
+  </files>
+  <params>
+    <param name="catid" type="text" label="Category ID" />
+    <param name="month_width" type="text" label="Month width" description="Width in pixels for the Month"/>
+    <param name="year_width" type="text" label="Year width" description="Width in pixels for the Year"/>
+  </params>
+</install>
