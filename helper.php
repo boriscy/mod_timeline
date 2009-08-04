@@ -28,7 +28,7 @@ class ModTimelineHelper
     $json = array("dateTimeFormat" => "iso8601",
                   "events" => array());
     foreach($items as $item) {
-      $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $item->title, 'description' => $item->introtext);
+      $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $item->title, 'description' => $item->introtext, 'id' => $item->id);
       array_push($json['events'], $tmp);
     }
 
