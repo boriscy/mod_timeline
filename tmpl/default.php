@@ -7,6 +7,7 @@
   height: 300px;
   z-index: 100;
 }
+div.simileAjax-bubble-container{ display: none !important; z-index: -10; }
 </style>
 <!--Tabs CSS -->
     <style type="text/css" media="screen">
@@ -112,8 +113,77 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
 <script src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/timeline_js/scripts/l10n/es/timeline.js" type="text/javascript" ></script>
 <script src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/timeline_js/scripts/l10n/es/labellers.js" type="text/javascript" ></script>
 
+<style type="text/css">
+/* Z-index of #mask must lower than #boxes .window */
+#mask {
+  position:absolute;
+  z-index:9000;
+  background-color:#000;
+  display: none;
+  top: 0px;
+  left: 0px;
+}
+/* Customize your modal window here, you can add background image too */
+#dialog {
+  width:375px; 
+  height:203px;
+  background: #FFF;
+  z-index: 10000;
+  display:none;
+  position: absolute;
+}
+#dialog a.close{
+  position: absolute;
+  right: -13px;
+  top: -13px;
+}
+</style>
+<!-- DIVs used for the modal window -->
+<div id="dialog" class="window">  
+  <!-- close button is defined as close class -->  
+  <a href="#" class="close"><img src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/images/x.png" alt="Cerrar" /></a>
+
+  <b>Testing of Modal Window</b> |   
+</div>  
+<!-- Do not remove div#mask, because you'll need it to fill the whole screen -->    
+<div id="mask"></div>
 <script type="text/javascript">
-  //Timeline.CompactEventPainter.prototype.showBubble = function{ console.log(arguments); };
+/***
+ * Script for modal window
+ */
+function modalWindow(id) {
+
+  var id = id || '#dialog';
+  //Get the window height and width
+  var winH = $(window).height();
+  var winW = $(window).width();
+  $('#mask').show();
+  //Set the popup window to center
+  $(id).css('top',  winH/2-$(id).height()/2);
+  $(id).css('left', winW/2-$(id).width()/2);
+
+  //transition effect
+  $(id).fadeIn(600);
+};
+function closeModal() {
+  $('#dialog').hide();
+  $('#mask').hide();
+}
+
+jQuery(document).ready(function() {
+
+  $('#dialog a').click(function() {
+    closeModal();
+  });
+  // mask options
+  var w = $(window).width(), h = $(document).height();
+  $('#mask').css({ width: w + "px", height: h + "px"}).fadeTo("fast", 0.6)
+  .click(function(){ closeModal(); }); // Hide mask
+
+});
+</script>
+
+<script type="text/javascript">
   // Function that fills the content
   Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function(el, theme, labeller) {
     el.innerHTML = this.getText();
@@ -121,17 +191,12 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
     //s.remove();
     url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&id=" + this.getID();
     $.getJSON(url, function(data){
-      //
+      setTimeout(function (){ $('div.simileAjax-bubble-container').remove() }, 300);
     });
+
+    return false;
   }
-  /*Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function(elmt, theme, labeller) {
-    //elmt.id = "contTimeline";
-    var html = '<div style="auto;width:550px;height:400px">';
-    for(var i=0; i<30; i++)
-      html += "Hola como estas esto es un contenido de prueba, para poder ver como se con mas HTML ahora, y ver si es que se puede expadir de forma proporcional<br/>";
-    html += "</div>"
-    elmt.innerHTML = html;// do whatever to fill elmt
-  };*/
+
   var tl;
         function loadTimeline() {
           var eventSource = new Timeline.DefaultEventSource();
@@ -172,7 +237,7 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
 
     window.onload = function () { 
       loadTimeline(); resizeTimeline();
-      Sly.find("img.timeline-copyright").remove();
+      $("img.timeline-copyright").remove();
     }
 
 </script>
