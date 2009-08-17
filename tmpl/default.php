@@ -100,6 +100,7 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
   text-align: left;
   padding: 10px;
   overflow: auto;
+  height: 350px;
 }
 </style>
 <!-- DIVs used for the modal window -->
@@ -153,11 +154,12 @@ jQuery(document).ready(function() {
 
   $('#dialog a.close').click(function() {
     closeModal();
+    return false;
   });
   // mask options
   var w = $(window).width(), h = $(document).height();
   $('#mask').css({ width: w + "px", height: h + "px"}).fadeTo("fast", 0.6)
-  .click(function(){ closeModal(); }); // Hide mask
+  .click(function(){ closeModal(); return false; }); // Hide mask
 
   $('#dialog ul li a').click(function() {
     $('#dialog ul li a').removeClass('selected-tab');
