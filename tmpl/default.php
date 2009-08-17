@@ -9,74 +9,6 @@
 }
 div.simileAjax-bubble-container{ display: none !important; z-index: -10; }
 </style>
-<!--Tabs CSS -->
-    <style type="text/css" media="screen">
-    <!--
-		BODY { margin: 10px; padding: 0; font: 1em "Trebuchet MS", verdana, arial, sans-serif; font-size: 100%; }
-		H1 { margin-bottom: 2px; font-family: Garamond, "Times New Roman", Times, Serif;}
-		DIV.container { margin: auto; width: 90%; margin-bottom: 10px;}
-		TEXTAREA { width: 80%;}
-		FIELDSET { border: 1px solid #ccc; padding: 1em; margin: 0; }
-		LEGEND { color: #ccc; font-size: 120%; }
-		INPUT, TEXTAREA { font-family: Arial, verdana; font-size: 125%; padding: 7px; border: 1px solid #999; }
-		LABEL { display: block; margin-top: 10px; } 
-		IMG { margin: 5px; }
-
-		UL.tabNavigation {
-		    list-style: none;
-		    margin: 0;
-		    padding: 0;
-		}
-
-		UL.tabNavigation LI {
-		    display: inline;
-		}
-
-		UL.tabNavigation LI A {
-		    padding: 3px 5px;
-		    background-color: #ccc;
-		    color: #000;
-		    text-decoration: none;
-		}
-
-		UL.tabNavigation LI A.selected,
-		UL.tabNavigation LI A:hover {
-		    background-color: #333;
-		    color: #fff;
-		    padding-top: 7px;
-		}
-		
-		UL.tabNavigation LI A:focus {
-			outline: 0;
-		}
-
-		div.tabs > div {
-			padding: 5px;
-			margin-top: 3px;
-			border: 5px solid #333;
-		}
-		
-		div.tabs > div h2 {
-			margin-top: 0;
-		}
-
-		#first {
-		    background-color: #f00;
-		}
-
-		#second {
-		    background-color: #0f0;
-		}
-
-		#third {
-		    background-color: #00f;
-		}
-		
-		.waste {
-			min-height: 1000px;
-		}
-    -->
-    </style>
 
 <script src="<?php echo JURI::base() ?>modules/mod_timeline/tmpl/jquery-1.3.2.min.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -125,25 +57,70 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
 }
 /* Customize your modal window here, you can add background image too */
 #dialog {
-  width:375px; 
-  height:203px;
+  width:500px; 
+  height:400px;
   background: #FFF;
   z-index: 10000;
   display:none;
   position: absolute;
+  border: 4px solid #4F4F4F;
 }
 #dialog a.close{
   position: absolute;
   right: -13px;
   top: -13px;
 }
+/**
+ * Tabs css
+ */
+.tabs ul{
+  margin: 0px; padding: 0px;
+  list-style: none !important;
+  background: #AFAFAF;
+  width: 100%;
+  display: table;
+}
+.tabs ul li{
+  float: left;
+  display: inline;
+  padding: 0px; margin: 0px;
+}
+.tabs ul li a{
+  display: block;
+  background: #AFAFAF;
+  padding: 4px 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.selected-tab{
+  background: #FFF !important;
+  padding: 4px 10px;
+}
+.tab{
+  text-align: left;
+  padding: 10px;
+  overflow: auto;
+}
 </style>
 <!-- DIVs used for the modal window -->
 <div id="dialog" class="window">  
   <!-- close button is defined as close class -->  
   <a href="#" class="close"><img src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/images/x.png" alt="Cerrar" /></a>
-
-  <b>Testing of Modal Window</b> |   
+  
+  <div id="tabs" class="tabs">
+    <ul>
+      <li><a href="#tabs-desc" class="selected-tab">Descripción</a></li>
+      <li><a href="#tabs-photo">Foto</a></li>
+      <li><a href="#tabs-video">Video</a></li>
+      <li><a href="#tabs-doc">Documento</a></li>
+      <li><a href="#tabs-graph">Gráfico</a></li>
+    </ul>
+    <div id="tabs-desc" class="tab">1</div>
+    <div id="tabs-photo" class="tab">2</div>
+    <div id="tabs-video" class="tab">3</div>
+    <div id="tabs-doc" class="tab">4</div>
+    <div id="tabs-graph" class="tab">5</div>
+  </div>
 </div>  
 <!-- Do not remove div#mask, because you'll need it to fill the whole screen -->    
 <div id="mask"></div>
@@ -159,7 +136,8 @@ function modalWindow(id) {
   var winW = $(window).width();
   $('#mask').show();
   //Set the popup window to center
-  $(id).css('top',  winH/2-$(id).height()/2);
+  $(id).css('top', $(window).scrollTop() + 50);
+  //$(id).css('top',  winH/2-$(id).height()/2);
   $(id).css('left', winW/2-$(id).width()/2);
 
   //transition effect
@@ -167,18 +145,28 @@ function modalWindow(id) {
 };
 function closeModal() {
   $('#dialog').hide();
+
   $('#mask').hide();
 }
 
 jQuery(document).ready(function() {
 
-  $('#dialog a').click(function() {
+  $('#dialog a.close').click(function() {
     closeModal();
   });
   // mask options
   var w = $(window).width(), h = $(document).height();
   $('#mask').css({ width: w + "px", height: h + "px"}).fadeTo("fast", 0.6)
   .click(function(){ closeModal(); }); // Hide mask
+
+  $('#dialog ul li a').click(function() {
+    $('#dialog ul li a').removeClass('selected-tab');
+    $(this).addClass('selected-tab');
+    $('#dialog .tab').hide();
+    var id = $(this).attr("href");
+    $(id).show();
+    return false;
+  });
 
 });
 </script>
@@ -192,6 +180,10 @@ jQuery(document).ready(function() {
     url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&id=" + this.getID();
     $.getJSON(url, function(data){
       setTimeout(function (){ $('div.simileAjax-bubble-container').remove() }, 300);
+      for(var k in data) {
+        $('#tabs-' + k).html(data[k]);
+      }
+      modalWindow();
     });
 
     return false;
