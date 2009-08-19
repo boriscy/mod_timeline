@@ -1,15 +1,3 @@
-<style type="text/css">
-.simileAjax-bubble-innerContainer{ width: 600px !important;}
-#timelineContent{
-  background: #FFF;
-  border: 1 px solid #000;
-  width: 500px;
-  height: 300px;
-  z-index: 100;
-}
-div.simileAjax-bubble-container{ display: none !important; z-index: -10; }
-</style>
-
 <script src="<?php echo JURI::base() ?>modules/mod_timeline/tmpl/jquery-1.3.2.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 // Tabs script
@@ -45,69 +33,14 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
 <script src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/timeline_js/scripts/l10n/es/timeline.js" type="text/javascript" ></script>
 <script src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/timeline_js/scripts/l10n/es/labellers.js" type="text/javascript" ></script>
 
-<style type="text/css">
-/* Z-index of #mask must lower than #boxes .window */
-#mask {
-  position:absolute;
-  z-index:9000;
-  background-color:#000;
-  display: none;
-  top: 0px;
-  left: 0px;
-}
-/* Customize your modal window here, you can add background image too */
-#dialog {
-  width:500px; 
-  height:400px;
-  background: #FFF;
-  z-index: 10000;
-  display:none;
-  position: absolute;
-  border: 4px solid #4F4F4F;
-}
-#dialog a.close{
-  position: absolute;
-  right: -13px;
-  top: -13px;
-}
-/**
- * Tabs css
- */
-.tabs ul{
-  margin: 0px; padding: 0px;
-  list-style: none !important;
-  background: #AFAFAF;
-  width: 100%;
-  display: table;
-}
-.tabs ul li{
-  float: left;
-  display: inline;
-  padding: 0px; margin: 0px;
-}
-.tabs ul li a{
-  display: block;
-  background: #AFAFAF;
-  padding: 4px 10px;
-  text-decoration: none;
-  font-weight: bold;
-}
-.selected-tab{
-  background: #FFF !important;
-  padding: 4px 10px;
-}
-.tab{
-  text-align: left;
-  padding: 10px;
-  overflow: auto;
-  height: 350px;
-}
-</style>
+<link rel="stylesheet" href="<?php echo JURI::base() ?>modules/mod_timeline/tmpl/style.css" type="text/css" />
+
 <!-- DIVs used for the modal window -->
 <div id="dialog" class="window">  
   <!-- close button is defined as close class -->  
   <a href="#" class="close"><img src="<?php echo JURI::base(); ?>modules/mod_timeline/tmpl/images/x.png" alt="Cerrar" /></a>
-  
+  <h1>Título</h1>
+
   <div id="tabs" class="tabs">
     <ul>
       <li><a href="#tabs-desc" class="selected-tab">Descripción</a></li>
@@ -174,6 +107,9 @@ jQuery(document).ready(function() {
 </script>
 
 <script type="text/javascript">
+  var theme = Timeline.ClassicTheme.create(); // create the theme
+      theme.event.label.height = 20;
+
   // Function that fills the content
   Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function(el, theme, labeller) {
     el.innerHTML = this.getText();
@@ -182,9 +118,28 @@ jQuery(document).ready(function() {
     url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&id=" + this.getID();
     $.getJSON(url, function(data){
       setTimeout(function (){ $('div.simileAjax-bubble-container').remove() }, 300);
+      $('#dialog h1').html(data.title);
+      delete(data.title);
+      var noData = '<h2 class="nodata">Ho hay Datos</h2>';
       for(var k in data) {
         $('#tabs-' + k).html(data[k]);
       }
+      var props = ["desc", "doc", "graph"];
+
+      for(var i=0, l = props.length; i < l; i++) {
+        if($('#tabs-' + props[i]).text() == "") {
+          $('#tabs-'+props[i]).html(noData);
+        }
+      }
+      
+      if($('#tabs-video').find("object").length <= 0 ) {
+        $('#tabs-video').html(noData);
+      }
+
+      if($('#tabs-photo').find("img").length <= 0){
+        $('#tabs-photo').html(noData);
+      }
+
       modalWindow();
     });
 
@@ -197,16 +152,17 @@ jQuery(document).ready(function() {
           var bandInfos = [
             Timeline.createBandInfo({
               eventSource: eventSource,
-              date: "Jun 28 2006 00:00:00 GMT",
-              width:  "70%",
+              date: "Jan 28 2006 00:00:00 GMT",
+              width:  "90%",
+              theme: theme,
               intervalUnit: Timeline.DateTime.MONTH,
               intervalPixels: <?php echo $params->get('month_width') ?>
             }),
             Timeline.createBandInfo({
-              eventSource: eventSource,
-              date: "Jun 28 2006 00:00:00 GMT",
-              width: "30%",
-              intervalUnit: Timeline.DateTime.YEAR,
+          //    eventSource: eventSource,
+              date: "Jan 28 2006 00:00:00 GMT",
+              width: "10%",
+              intervalUnit: Timeline.DateTime.MONTH,
               intervalPixels: <?php echo $params->get('year_width') ?>
             })
           ];
@@ -236,7 +192,7 @@ jQuery(document).ready(function() {
 
 </script>
     <div id="timelineContent" style="display:none"></div>
-      <div id="my-timeline" style="height: 250px; border: 1px solid #aaa" ></div>
+      <div id="my-timeline" style="height: <?php echo $params->get('height') ?>px; border: 1px solid #aaa" ></div>
       
 
       <noscript>

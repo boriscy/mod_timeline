@@ -1,0 +1,92 @@
+/* Z-index of #mask must lower than #boxes .window */
+#mask {
+  position:absolute;
+  z-index:9000;
+  background-color:#000;
+  display: none;
+  top: 0px;
+  left: 0px;
+}
+/* Customize your modal window here, you can add background image too */
+#dialog {
+  width:580px; 
+  height:450px;
+  background: #FFF;
+  z-index: 10000;
+  display:none;
+  position: absolute;
+  border: 4px solid #4F4F4F;
+}
+#dialog h1{
+  background: transparent url(images/fondo.jpg) repeat-x;
+  height: 30px;
+  color: #FFF;
+  margin: 0px;
+  font-size: 18px;
+}
+#dialog a.close{
+  position: absolute;
+  right: -13px;
+  top: -13px;
+}
+/**
+ * Tabs css
+ */
+.tabs ul{
+  margin: 0px; padding: 0px;
+  list-style: none !important;
+  background: #AFAFAF;
+  width: 100%;
+  display: table;
+}
+.tabs ul li{
+  float: left;
+  display: inline;
+  padding: 0px; margin: 0px;
+}
+.tabs ul li a{
+  display: block;
+  background: #AFAFAF;
+  padding: 4px 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.selected-tab{
+  background: #FFF !important;
+  padding: 4px 10px;
+}
+div.tab{
+  text-align: left;
+  padding: 10px;
+  overflow: auto;
+  height: 360px;
+}
+/************************/
+/*Timeline CSS*/
+span.fecha{
+  font-size: 10px;
+  magin-top: -2px;
+}
+.simileAjax-bubble-innerContainer{ width: 600px !important;}
+#timelineContent{
+  background: #FFF;
+  border: 1 px solid #000;
+  width: 500px;
+  height: 300px;
+  z-index: 100;
+}
+.timeline-event-icon{
+  display:none;
+}
+.timeline-event-label{
+  padding: 1px;
+  background: #FFF;
+  border: 1px solid #7F7F7F;
+}
+.timeline-event-label br{
+  font-size: 9px;
+}
+div.simileAjax-bubble-container{ display: none !important; z-index: -10; }
+.nodata{
+  text-color: #5f5f5f;
+}

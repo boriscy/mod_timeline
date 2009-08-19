@@ -21,8 +21,9 @@
     <filename>tmpl/index.html</filename>
   </files>
   <params>
-    <param name="catid" type="text" label="Category ID" />
-    <param name="month_width" type="text" label="Month width" description="Width in pixels for the Month"/>
-    <param name="year_width" type="text" label="Year width" description="Width in pixels for the Year"/>
+    <param name="sectionid" type="text" label="Section ID" />
+    <param name="height" type="text" label="Alto Timeline" description="Height for timeline"/>
+    <param name="month_width" type="text" label="Barra 1" description="Width in pixels for the Month"/>
+    <param name="year_width" type="text" label="Barra 2" description="Width in pixels for the Year"/>
   </params>
 </install>
