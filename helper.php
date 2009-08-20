@@ -37,8 +37,13 @@ class ModTimelineHelper
     foreach($items as $item) {
       list($date, $time) = split(" ", $item->publish_up);
       $date = split("-", $date);
+
       $date = '<span class="fecha">'.$date[2].' de '.$months[$date[1]]. ' ' . $date[0] . '</span>';
-      $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $item->title .' '. $date, 'id' => $item->id);
+      $title = $item->title .' '. $date;
+      if(preg_match('/<object[^>]+>/', $item->fulltext)) {
+        $title = '<img src="' . JURI::base() . 'modules/mod_timeline/tmpl/images/youtube.png" alt="video" /> '. $title;
+      }
+      $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $title, 'id' => $item->id);
       array_push($json['events'], $tmp);
     }
 

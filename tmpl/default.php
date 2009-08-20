@@ -42,7 +42,7 @@ Timeline_urlPrefix = "http://static.simile.mit.edu/timeline/api-2.3/";
   <h1>Título</h1>
 
   <div id="tabs" class="tabs">
-    <ul>
+    <ul class="tabs">
       <li><a href="#tabs-desc" class="selected-tab">Descripción</a></li>
       <li><a href="#tabs-photo">Foto</a></li>
       <li><a href="#tabs-video">Video</a></li>
@@ -107,6 +107,14 @@ jQuery(document).ready(function() {
 </script>
 
 <script type="text/javascript">
+  // Put the first tab available
+  function resetTabs(id) {
+    id = id || '#dialog';
+    $(id + ' .tab:first').show().siblings("div.tab").hide();
+    $(id + ' ul.tabs a:first').addClass('selected-tab');
+    $(id + ' ul li a:not(:first)').removeClass("selected-tab"); 
+  }
+
   var theme = Timeline.ClassicTheme.create(); // create the theme
       theme.event.label.height = 20;
 
@@ -117,6 +125,7 @@ jQuery(document).ready(function() {
     //s.remove();
     url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&id=" + this.getID();
     $.getJSON(url, function(data){
+      resetTabs();
       setTimeout(function (){ $('div.simileAjax-bubble-container').remove() }, 300);
       $('#dialog h1').html(data.title);
       delete(data.title);
