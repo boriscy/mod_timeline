@@ -9,8 +9,8 @@
 }
 /* Customize your modal window here, you can add background image too */
 #dialog {
-  width:580px; 
-  height:450px;
+  width:620px; 
+  height:470px;
   background: #FFF;
   z-index: 10000;
   display:none;
@@ -61,7 +61,7 @@ div.tab{
   text-align: left;
   padding: 10px;
   overflow: auto;
-  height: 360px;
+  height: 380px;
 }
 /************************/
 /*Timeline CSS*/
