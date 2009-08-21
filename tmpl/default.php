@@ -71,7 +71,6 @@ function modalWindow(id) {
   $('#mask').show();
   //Set the popup window to center
   $(id).css('top', $(window).scrollTop() + 50);
-  //$(id).css('top',  winH/2-$(id).height()/2);
   $(id).css('left', winW/2-$(id).width()/2);
 
   //transition effect
