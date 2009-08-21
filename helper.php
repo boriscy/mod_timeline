@@ -28,6 +28,7 @@ class ModTimelineHelper
     $items = (count($items) <= 0) ? ModTimelineHelper::getItems(): $items;
     $json = array("dateTimeFormat" => "iso8601",
                   "events" => array());
+    // Meses en español
     $months = array("01" => "Enero", "02" => "Febrero", "03" => "Marzo",
                         "04" => "Abril", "05" => "Mayo", "06" => "Junio",
                         "07" => "Junio", "08" => "Agosto", "09" => "Septiembre",
