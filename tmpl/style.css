@@ -68,6 +68,7 @@ div.tab{
 span.fecha{
   font-size: 10px;
   magin-top: -2px;
+  color: #4A6882;
 }
 .simileAjax-bubble-innerContainer{ width: 600px !important;}
 #timelineContent{

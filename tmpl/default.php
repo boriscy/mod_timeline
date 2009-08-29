@@ -106,6 +106,7 @@ jQuery(document).ready(function() {
 </script>
 
 <script type="text/javascript">
+
   // Put the first tab available
   function resetTabs(id) {
     id = id || '#dialog';
@@ -154,51 +155,76 @@ jQuery(document).ready(function() {
     return false;
   }
 
-  var tl;
-        function loadTimeline() {
-          var eventSource = new Timeline.DefaultEventSource();
-          var bandInfos = [
-            Timeline.createBandInfo({
-              eventSource: eventSource,
-              date: "Jan 28 2006 00:00:00 GMT",
-              width:  "90%",
-              theme: theme,
-              intervalUnit: Timeline.DateTime.MONTH,
-              intervalPixels: <?php echo $params->get('month_width') ?>
-            }),
-            Timeline.createBandInfo({
-          //    eventSource: eventSource,
-              date: "Jan 28 2006 00:00:00 GMT",
-              width: "10%",
-              intervalUnit: Timeline.DateTime.MONTH,
-              intervalPixels: <?php echo $params->get('year_width') ?>
-            })
-          ];
-          // Sincronizacion  entre años y meses
-          bandInfos[1].syncWith = 0;
-          bandInfos[1].highlight = true;
+    var tl;
 
-          tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
-          eventSource.loadJSON(timeline_data, '.');
-          tl.layout();
-        }
-        
-        var resizeTimerID = null;
-        function resizeTimeline() {
-          if(resizeTimerID == null) {
-            resizeTimerID = window.setTimeout(function() {
-                resizeTimerID = null;
-                tl.layout();
-            }, 500);
-          }
-        }
+    var theme = Timeline.ClassicTheme.create(); // create the theme
+    theme.event.track.height = 39;
+
+
+    function loadTimeline() {
+      var eventSource = new Timeline.DefaultEventSource();
+      var bandInfos = [
+        Timeline.createBandInfo({
+          eventSource: eventSource,
+          date: "Jan 28 2006 00:00:00 GMT",
+          width:  "90%",
+          theme: theme,
+          intervalUnit: Timeline.DateTime.MONTH,
+          intervalPixels: <?php echo $params->get('month_width') ?>
+        }),
+        Timeline.createBandInfo({
+      //    eventSource: eventSource,
+          date: "Jan 28 2006 00:00:00 GMT",
+          width: "10%",
+          intervalUnit: Timeline.DateTime.MONTH,
+          intervalPixels: <?php echo $params->get('year_width') ?>
+        })
+      ];
+      // Sincronizacion  entre años y meses
+      bandInfos[1].syncWith = 0;
+      bandInfos[1].highlight = true;
+
+      tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
+      eventSource.loadJSON(timeline_data, '.');
+      tl.layout();
+    }
+    
+    var resizeTimerID = null;
+    function resizeTimeline() {
+      if(resizeTimerID == null) {
+        resizeTimerID = window.setTimeout(function() {
+            resizeTimerID = null;
+            tl.layout();
+        }, 500);
+      }
+    }
 
     window.onload = function () { 
       loadTimeline(); resizeTimeline();
       $("img.timeline-copyright").remove();
+
+      var tl = Timeline.timelines[0];
+      // Cambio de año
+      $('#year_select').change(function() {
+        d = new Date(Date.parse("January 1, "+ this.value));
+        tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(d));
+      });
     }
 
 </script>
+<label for="year_select">Año:</label><select id="year_select">
+  <option value="2000">2000</option>
+  <option value="2001">2001</option>
+  <option value="2002">2002</option>
+  <option value="2003">2003</option>
+  <option value="2004">2004</option>
+  <option value="2005">2005</option>
+  <option value="2006">2006</option>
+  <option value="2007">2007</option>
+  <option value="2008">2008</option>
+  <option value="2009">2009</option>
+</select>
+
     <div id="timelineContent" style="display:none"></div>
       <div id="my-timeline" style="height: <?php echo $params->get('height') ?>px; border: 1px solid #aaa" ></div>
       

@@ -40,7 +40,7 @@ class ModTimelineHelper
       $date = split("-", $date);
 
       $date = '<span class="fecha">'.$date[2].' de '.$months[$date[1]]. ' ' . $date[0] . '</span>';
-      $title = $item->title .' '. $date;
+      $title = $item->title. '<br/>'. $date;
       if(preg_match('/<object[^>]+>/', $item->fulltext)) {
         $title = '<img src="' . JURI::base() . 'modules/mod_timeline/tmpl/images/youtube.png" alt="video" /> '. $title;
       }
