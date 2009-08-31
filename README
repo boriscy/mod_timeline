@@ -92,7 +92,7 @@ class ContentViewArticle extends JView
     foreach($items as $item) {
       list($date, $time) = split(" ", $item->publish_up);
      
-      list($day, $month, $year) = split("-", $date);
+      list($year, $month, $day) = split("-", $date);
       $date = '<span class="fecha">'.$day.' de '.$this->months[$month]. ' ' . $year . '</span>';
       // Set Min Year
       if($min) {

@@ -226,8 +226,23 @@ jQuery(document).ready(function() {
       $.getJSON(url, function(data) {
         tl.getBand(0).getEventSource().clear();
         tl.getBand(0).getEventSource().loadJSON(data, '.');
+        setMaxMinYears(data.minYear, data.maxYear);
       });
     }
+    
+    /**
+     * Sets the select with the max and Min Years
+     */
+    function setMaxMinYears(min, max) {
+      var text = '';
+      $('#year_select').html('');
+      min = parseInt(min), max = parseInt(max);
+      for(var i = min; i <= max; i++) {
+        text += '<option value="' + i + '">' + i + '</option>';
+      }
+      $('#year_select').html(text);
+    }
+    
 
     window.onload = function () { 
       
