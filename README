@@ -1,1 +1,117 @@
 mod_timeline helps you present a timeline in Joomlmod_timeline helps you present a timeline in Joomla
+
+// This code must be available on the View on
+// components/com_content/views/article/view.ajax.php
+
+<?php
+/**
+ * @version		$Id: view.pdf.php 11371 2008-12-30 01:31:50Z ian $
+ * @package		Joomla
+ * @subpackage	Content
+ * @copyright	Copyright (C) 2005 - 2008 Open Source Matters. All rights reserved.
+ * @license		GNU/GPL, see LICENSE.php
+ * Joomla! is free software. This version may have been modified pursuant to the
+ * GNU General Public License, and as distributed it includes or is derivative
+ * of works licensed under the GNU General Public License or other free or open
+ * source software licenses. See COPYRIGHT.php for copyright notices and
+ * details.
+ */
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die( 'Restricted access' );
+
+jimport( 'joomla.application.component.view');
+
+/**
+ * HTML Article View class for the Content component
+ *
+ * @package		Joomla
+ * @subpackage	Content
+ * @since 1.5
+ */
+class ContentViewArticle extends JView
+{
+  public $months = array("01" => "Enero", "02" => "Febrero", "03" => "Marzo",
+                      "04" => "Abril", "05" => "Mayo", "06" => "Junio",
+                      "07" => "Junio", "08" => "Agosto", "09" => "Septiembre",
+                      "10" => "Octubre", "11" => "Noviembre", "12" => "Diciembre"
+                      );
+
+	function display($tpl = null)
+	{
+    if($_GET['type'] == 'items') {
+      $json = $this->getTimelineItems();
+    }else{
+      $json = $this->getTimelineEventData();
+    }
+    echo json_encode($json);
+  }
+
+  function getTimelineEventData() {
+    $db = &JFactory::getDBO();
+    $id = mysql_escape_string($_GET['id']);
+    $query = "SELECT * FROM `#__content` WHERE id=$id";
+    $db->setQuery($query);
+    $item = ($item = $db->loadObject()) ? $item: array();
+    // Added so that there are no errors when the split is made and the $desc, $photo, $video, $doc, $graph variables are set
+    $extra = '<hr class="system-pagebreak" /><hr class="system-pagebreak" /><hr class="system-pagebreak" /><hr class="system-pagebreak" />';
+    list($desc, $photo, $video, $doc, $graph) = preg_split('/\<hr[^<>]class="system-pagebreak" \/>/', $item->fulltext . $extra);
+    return array('title' => $item->title, 'desc' => $desc, 'photo' => $photo, 'video' => $video, 'doc' => $doc, 'graph' => $graph);
+  }
+
+  function getTimelineItems() {
+    return $this->createJSONArray( $this->getItems($_GET['categoryid']) );
+  }
+
+   /**
+   * Return all items in a section
+   * @param String $sectionid
+   * @return array
+   */
+  public function getItems($categoryid)
+  {
+    $categoryid = mysql_escape_string($categoryid);
+    $db = &JFactory::getDBO();
+    $query = "SELECT * FROM `#__content` WHERE catid=$categoryid ORDER BY created ASC";
+    $db->setQuery($query);
+    $items = ($items = $db->loadObjectList()) ? $items: array();
+    return $items;
+  }
+
+   /**
+   * Creates the JSON object to be used by the Timeline
+   * @param $items array()
+   * @return string
+   */
+  public function createJSONArray($items)
+  {
+    $json = array("dateTimeFormat" => "iso8601",
+                   "events" => array());
+
+    $min = true;
+    foreach($items as $item) {
+      list($date, $time) = split(" ", $item->publish_up);
+     
+      list($day, $month, $year) = split("-", $date);
+      $date = '<span class="fecha">'.$day.' de '.$this->months[$month]. ' ' . $year . '</span>';
+      // Set Min Year
+      if($min) {
+        $json["minYear"] = $year;
+        $min = false;
+      }
+
+      $title = $item->title. '<br/>'. $date;
+      if(preg_match('/<object[^>]+>/', $item->fulltext)) {
+        $title = '<span class="video" alt="video"></span> '. $title;
+      }
+      $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $title, 'id' => $item->id);
+      array_push($json['events'], $tmp);
+    }
+    
+    $json["maxYear"] = $year;
+
+    return $json;
+  }
+ 
+}
+?>
