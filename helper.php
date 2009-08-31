@@ -5,7 +5,7 @@
 class ModTimelineHelper
 {
 
-  public $sectionid = "";
+  public $sectionid;
   public $db;
   // Meses en español
   public $months = array("01" => "Enero", "02" => "Febrero", "03" => "Marzo",
@@ -27,7 +27,7 @@ class ModTimelineHelper
   public function getItems()
   {
     $sectionid = "WHERE sectionid={$this->sectionid}";
-    $query = "SELECT * FROM `#__content` $sectionid ORDER BY created ASC ";
+    $query = "SELECT * FROM `#__content` $sectionid ORDER BY created ASC";
     $this->db->setQuery($query);
     $items = ($items = $this->db->loadObjectList()) ? $items: array();
     return $items;
@@ -39,7 +39,7 @@ class ModTimelineHelper
    */
   public function getCategories()
   {
-    $query = "SELECT * FROM categories WHERE sectionid={$this->sectionid} ORDER BY title ASC";
+    $query = "SELECT * FROM `#__categories` WHERE sectionid={$this->sectionid} ORDER BY title ASC";
     $this->db->query($query);
     $items = $this->db->loadObjectList();
     $categories = array();

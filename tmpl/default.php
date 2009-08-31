@@ -230,7 +230,11 @@ jQuery(document).ready(function() {
     }
 
     window.onload = function () { 
+      
+
       loadTimeline(); resizeTimeline();
+      loadTimelineData($('#categoryid').val() );
+
       $("img.timeline-copyright").remove();
 
       var tl = Timeline.timelines[0];
