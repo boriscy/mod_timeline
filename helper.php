@@ -7,7 +7,11 @@ class ModTimelineHelper
 
   public $section = "";
 
- 
+  /**
+   * Return all items in a section
+   * @param String $sectionid
+   * @return array
+   */
   public static function getItems($sectionid = "")
   {
     $sectionid = ($sectionid != "") ? "WHERE sectionid=$sectionid" : "";

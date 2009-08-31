@@ -1,3 +1,5 @@
+<?php $uri = JURI::base(); ?>
+<?php $t_uri = $uri."modules/mod_timeline/"; ?>
 <script src="<?php echo JURI::base() ?>modules/mod_timeline/tmpl/jquery-1.3.2.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 // Tabs script
@@ -107,6 +109,7 @@ jQuery(document).ready(function() {
 
 <script type="text/javascript">
 
+
   // Put the first tab available
   function resetTabs(id) {
     id = id || '#dialog';
@@ -167,27 +170,20 @@ jQuery(document).ready(function() {
         Timeline.createBandInfo({
           eventSource: eventSource,
           date: "Jan 28 2006 00:00:00 GMT",
-          width:  "90%",
+          width:  "100%",
           theme: theme,
           intervalUnit: Timeline.DateTime.MONTH,
           intervalPixels: <?php echo $params->get('month_width') ?>
-        }),
-        Timeline.createBandInfo({
-      //    eventSource: eventSource,
-          date: "Jan 28 2006 00:00:00 GMT",
-          width: "10%",
-          intervalUnit: Timeline.DateTime.MONTH,
-          intervalPixels: <?php echo $params->get('year_width') ?>
         })
       ];
-      // Sincronizacion  entre años y meses
-      bandInfos[1].syncWith = 0;
-      bandInfos[1].highlight = true;
 
       tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
       eventSource.loadJSON(timeline_data, '.');
       tl.layout();
     }
+
+    // Con esto se limpia los eventos
+    //tl.getBand(0).getEventSource().clear();
     
     var resizeTimerID = null;
     function resizeTimeline() {
@@ -206,12 +202,16 @@ jQuery(document).ready(function() {
       var tl = Timeline.timelines[0];
       // Cambio de año
       $('#year_select').change(function() {
-        d = new Date(Date.parse("January 1, "+ this.value));
+        //var d = new Date(Date.parse("January 1, "+ this.value));
+        var d = new Date(parseInt(this.value), 0, 1);
         tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(d));
       });
     }
 
 </script>
+
+<div class="center-text">
+<img id="arrow_left" class="cursor-pointer" src="<?php echo $t_uri ?>tmpl/images/arrow_left.png" alt="1 año menos"/>
 <label for="year_select">Año:</label><select id="year_select">
   <option value="2000">2000</option>
   <option value="2001">2001</option>
@@ -224,6 +224,9 @@ jQuery(document).ready(function() {
   <option value="2008">2008</option>
   <option value="2009">2009</option>
 </select>
+<img id="arrow_right" class="cursor-pointer" src="<?php echo $t_uri ?>tmpl/images/arrow_right.png" alt="1 año mas"/>
+
+</div>
 
     <div id="timelineContent" style="display:none"></div>
       <div id="my-timeline" style="height: <?php echo $params->get('height') ?>px; border: 1px solid #aaa" ></div>
