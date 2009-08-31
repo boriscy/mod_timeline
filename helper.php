@@ -5,21 +5,49 @@
 class ModTimelineHelper
 {
 
-  public $section = "";
+  public $sectionid = "";
+  public $db;
+  // Meses en español
+  public $months = array("01" => "Enero", "02" => "Febrero", "03" => "Marzo",
+                      "04" => "Abril", "05" => "Mayo", "06" => "Junio",
+                      "07" => "Junio", "08" => "Agosto", "09" => "Septiembre",
+                      "10" => "Octubre", "11" => "Noviembre", "12" => "Diciembre"
+                      );
+
+  public function __construct($sectionid) {
+    $this->sectionid = $sectionid;
+    $this->db = &JFactory::getDBO();
+  }
 
   /**
    * Return all items in a section
    * @param String $sectionid
    * @return array
    */
-  public static function getItems($sectionid = "")
+  public function getItems()
   {
-    $sectionid = ($sectionid != "") ? "WHERE sectionid=$sectionid" : "";
-    $db = &JFactory::getDBO();
+    $sectionid = "WHERE sectionid={$this->sectionid}";
     $query = "SELECT * FROM `#__content` $sectionid ORDER BY created ASC ";
-    $db->setQuery($query);
-    $items = ($items = $db->loadObjectList()) ? $items: array();
+    $this->db->setQuery($query);
+    $items = ($items = $this->db->loadObjectList()) ? $items: array();
     return $items;
+  }
+
+  /**
+   * Returns all categories in a section
+   * @return array()
+   */
+  public function getCategories()
+  {
+    $query = "SELECT * FROM categories WHERE sectionid={$this->sectionid} ORDER BY title ASC";
+    $this->db->query($query);
+    $items = $this->db->loadObjectList();
+    $categories = array();
+
+    foreach($items as $item) {
+      $categories[] = array('id'=> $item->id, 'title' => $item->title);
+    }
+    return $categories;
   }
 
   /**
@@ -27,23 +55,17 @@ class ModTimelineHelper
    * @param $items array()
    * @return string
    */
-  public static function createJSONArray($items = array())
+  public function createJSONArray($items = array())
   {
-    $items = (count($items) <= 0) ? ModTimelineHelper::getItems(): $items;
+    $items = (count($items) <= 0) ? $this->getItems(): $items;
     $json = array("dateTimeFormat" => "iso8601",
                   "events" => array());
-    // Meses en español
-    $months = array("01" => "Enero", "02" => "Febrero", "03" => "Marzo",
-                        "04" => "Abril", "05" => "Mayo", "06" => "Junio",
-                        "07" => "Junio", "08" => "Agosto", "09" => "Septiembre",
-                        "10" => "Octubre", "11" => "Noviembre", "12" => "Diciembre"
-                        );
 
     foreach($items as $item) {
       list($date, $time) = split(" ", $item->publish_up);
       $date = split("-", $date);
 
-      $date = '<span class="fecha">'.$date[2].' de '.$months[$date[1]]. ' ' . $date[0] . '</span>';
+      $date = '<span class="fecha">'.$date[2].' de '.$this->months[$date[1]]. ' ' . $date[0] . '</span>';
       $title = $item->title. '<br/>'. $date;
       if(preg_match('/<object[^>]+>/', $item->fulltext)) {
         $title = '<img src="' . JURI::base() . 'modules/mod_timeline/tmpl/images/youtube.png" alt="video" /> '. $title;

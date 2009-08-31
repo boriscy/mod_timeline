@@ -21,8 +21,8 @@
     <filename>tmpl/index.html</filename>
   </files>
   <params>
-    <param name="categoryid" type="text" label="Categoría ID" />
-    <param name="height" type="text" label="Alto Timeline" description="Altura timeline"/>
     <param name="sectionid" type="text" label="Sección" description="Section ID"/>
+    <param name="height" type="text" label="Alto Timeline" description="Altura timeline"/>
+    <param name="interval" type="text" label="Ancho entre meses" description="Ancho en pixeles que existe entre los meses del timeline"/>
   </params>
 </install>

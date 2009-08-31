@@ -173,7 +173,7 @@ jQuery(document).ready(function() {
           width:  "100%",
           theme: theme,
           intervalUnit: Timeline.DateTime.MONTH,
-          intervalPixels: <?php echo $params->get('month_width') ?>
+          intervalPixels: <?php echo $interval ?>
         })
       ];
 
@@ -183,7 +183,6 @@ jQuery(document).ready(function() {
     }
 
     // Con esto se limpia los eventos
-    //tl.getBand(0).getEventSource().clear();
     
     var resizeTimerID = null;
     function resizeTimeline() {
@@ -195,17 +194,53 @@ jQuery(document).ready(function() {
       }
     }
 
+    /**
+     * Changes the current Timeline Year
+     */
+    function changeTLYear(num) {
+      var d = new Date(parseInt(num), 0, 1);
+      tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(d));
+    }
+
+    /**
+     * Changes the select Year and Returns an Int number
+     * @param integer val
+     * @return integer
+     */
+    function changeSelectYear(val) {
+      var year = parseInt($('#year_select').val()) + val;
+      if($('#year_select option:contains(' + year + ')' ).length > 0 ) {
+        $('#year_select').val(year);
+      }else{
+        year = year - val;
+      }
+      return year;
+    }
+
+    /**
+     * Loads Data for Timeline using AJAX
+     * @param string category
+     */
+    function loadTimelineData(categoryid) {
+      url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&type=items&categoryid=" + categoryid;
+      $.getJSON(url, function(data) {
+        tl.getBand(0).getEventSource().clear();
+        tl.getBand(0).getEventSource().loadJSON(data, '.');
+      });
+    }
+
     window.onload = function () { 
       loadTimeline(); resizeTimeline();
       $("img.timeline-copyright").remove();
 
       var tl = Timeline.timelines[0];
       // Cambio de año
-      $('#year_select').change(function() {
-        //var d = new Date(Date.parse("January 1, "+ this.value));
-        var d = new Date(parseInt(this.value), 0, 1);
-        tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseGregorianDateTime(d));
-      });
+      $('#year_select').change(function() { changeTLYear(this.value) });
+
+      $('#arrow_left').click(function() { changeTLYear( changeSelectYear(-1) ) });
+      $('#arrow_right').click(function() { changeTLYear( changeSelectYear(1) ) });
+
+      $('#categoryid').change(function() { loadTimelineData(this.value) });
     }
 
 </script>
@@ -225,6 +260,14 @@ jQuery(document).ready(function() {
   <option value="2009">2009</option>
 </select>
 <img id="arrow_right" class="cursor-pointer" src="<?php echo $t_uri ?>tmpl/images/arrow_right.png" alt="1 año mas"/>
+
+
+<label>Categoría:</label>
+<select id="categoryid">
+<?php foreach($categories as $cat): ?>
+  <option value="<?php echo $cat['id']?>"><?php echo $cat['title'] ?></option>
+<?php endforeach; ?>
+</select>
 
 </div>
 
