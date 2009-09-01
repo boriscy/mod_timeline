@@ -39,8 +39,8 @@ class ModTimelineHelper
    */
   public function getCategories()
   {
-    $query = "SELECT * FROM `#__categories` WHERE sectionid={$this->sectionid} ORDER BY title ASC";
-    $this->db->query($query);
+    $query = "SELECT * FROM `#__categories` WHERE section='{$this->sectionid}' ORDER BY title ASC";
+    $this->db->setQuery($query);
     $items = $this->db->loadObjectList();
     $categories = array();
 

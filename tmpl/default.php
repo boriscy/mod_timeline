@@ -268,15 +268,6 @@ jQuery(document).ready(function() {
 <img id="arrow_left" class="cursor-pointer" src="<?php echo $t_uri ?>tmpl/images/arrow_left.png" alt="1 año menos"/>
 <label for="year_select">Año:</label><select id="year_select">
   <option value="2000">2000</option>
-  <option value="2001">2001</option>
-  <option value="2002">2002</option>
-  <option value="2003">2003</option>
-  <option value="2004">2004</option>
-  <option value="2005">2005</option>
-  <option value="2006">2006</option>
-  <option value="2007">2007</option>
-  <option value="2008">2008</option>
-  <option value="2009">2009</option>
 </select>
 <img id="arrow_right" class="cursor-pointer" src="<?php echo $t_uri ?>tmpl/images/arrow_right.png" alt="1 año mas"/>
 

@@ -7,7 +7,7 @@ $interval = 300;// $params->get('interval') ? $params->get('interval') : 200;
 
 $tm = new ModTimelineHelper($sectionid);
 $json = array();
-$tm->getItems();
+//$tm->getItems();
 $categories = $tm->getCategories();
 
 require_once(JModuleHelper::getLayoutPath('mod_timeline'));
