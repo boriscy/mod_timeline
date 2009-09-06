@@ -39,7 +39,7 @@ class ContentViewArticle extends JView
 
 	function display($tpl = null)
 	{
-    if($_GET['type'] == 'items') {
+    if(isset($_GET['type']) && $_GET['type'] == 'items') {
       $json = $this->getTimelineItems();
     }else{
       $json = $this->getTimelineEventData();
@@ -70,9 +70,20 @@ class ContentViewArticle extends JView
    */
   public function getItems($categoryid)
   {
+    $conditions = 'catid IN (';
     $categoryid = mysql_escape_string($categoryid);
+    if($categoryid == 'all') {
+      $array = array();
+      foreach($_GET['category'] as $item)
+        array_push($array,intval($item));
+      $conditions .= join(",", $array);
+    }else{
+      $conditions .= intval($categoryid);
+    }
+    $conditions .= ')';
+
     $db = &JFactory::getDBO();
-    $query = "SELECT * FROM `#__content` WHERE catid=$categoryid ORDER BY created ASC";
+    $query = "SELECT * FROM `#__content` WHERE $conditions ORDER BY created ASC";
     $db->setQuery($query);
     $items = ($items = $db->loadObjectList()) ? $items: array();
     return $items;
@@ -102,8 +113,12 @@ class ContentViewArticle extends JView
 
       $title = $item->title. '<br/>'. $date;
       if(preg_match('/<object[^>]+>/', $item->fulltext)) {
-        $title = '<span class="video" alt="video"></span> '. $title;
+        $title .= ' <span class="video" alt="video"></span> ';
       }
+      if(preg_match('/<img[^>]+\/>/', $item->fulltext) ) {
+        $title .= ' <span class="photo" alt="foto"></span>';
+      }
+
       $tmp = array('start' =>date("c",strtotime($item->publish_up)), 'title' => $title, 'id' => $item->id);
       array_push($json['events'], $tmp);
     }

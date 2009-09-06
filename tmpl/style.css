@@ -31,6 +31,12 @@
   right: -13px;
   top: -13px;
 }
+#dialog img{
+  border: none;
+}
+#dialog a.close{
+  border: none;
+}
 /**
  * Tabs css
  */
@@ -69,6 +75,7 @@ span.fecha{
   font-size: 10px;
   magin-top: -2px;
   color: #4A6882;
+  float: left;
 }
 .simileAjax-bubble-innerContainer{ width: 600px !important;}
 #timelineContent{
@@ -82,9 +89,16 @@ span.fecha{
   display:none;
 }
 .timeline-event-label{
-  padding: 1px;
+  padding: 2px;
   background: #FFF;
   border: 1px solid #7F7F7F;
+}
+.tm-over{
+  background-color: #587495;
+  color: #FFF;
+}
+.tm-over .fecha{
+ color: #FDFF0F;
 }
 
 .timeline-event-label img{
@@ -104,6 +118,13 @@ div.simileAjax-bubble-container{ display: none !important; z-index: -10; }
 }
 .video{
   background: url(images/youtube.png);
+  width: 16px;
+  height: 16px;
+  display: block;
+  float: left;
+}
+.photo{
+  background: url(images/flickr.png);
   width: 16px;
   height: 16px;
   display: block;

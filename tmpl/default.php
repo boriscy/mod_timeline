@@ -104,6 +104,11 @@ jQuery(document).ready(function() {
     return false;
   });
 
+  // Efecto de Hover para los labels
+  $('.timeline-event-label').live('mouseover', function(){
+    $(this).addClass('tm-over');
+  }).live('mouseout', function() { $(this).removeClass('tm-over'); });
+
 });
 </script>
 
@@ -222,7 +227,16 @@ jQuery(document).ready(function() {
      * @param string category
      */
     function loadTimelineData(categoryid) {
+
       url = "<?php echo JURI::base(); ?>index.php?option=com_content&view=article&format=ajax&type=items&categoryid=" + categoryid;
+      if(categoryid == 'all') {
+        $('#categoryid option').each(function(pos, item) { 
+          var val = $(item).val();
+          if(val != categoryid)
+            url+='&category[]=' + val;
+        });
+      }
+
       $.getJSON(url, function(data) {
         tl.getBand(0).getEventSource().clear();
         tl.getBand(0).getEventSource().loadJSON(data, '.');
@@ -274,6 +288,7 @@ jQuery(document).ready(function() {
 
 <label>Categoría:</label>
 <select id="categoryid">
+  <option value="all">Ver todos</option>
 <?php foreach($categories as $cat): ?>
   <option value="<?php echo $cat['id']?>"><?php echo $cat['title'] ?></option>
 <?php endforeach; ?>
